@@ -7,7 +7,7 @@
 '' to attach an ID number and a pointer to any HWND.
 '' A pointer to this class is stored in a window's
 '' extra window data at GWL_USERDATA.  When we create a
-'' window (or control, etc) we also call
+'' window (or control, etc) we also call SetWindowInfo()
 
 constructor CWindowInfo()
 

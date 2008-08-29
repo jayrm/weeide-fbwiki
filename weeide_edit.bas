@@ -13,8 +13,19 @@
 constructor CWeeIdeEditControl()
 end constructor 
 
+''
 destructor CWeeIdeEditControl()
 end destructor
+
+''
+function CWeeIdeEditControl.GetHwnd() as HWND
+	return _txt
+end function
+
+''
+operator CWeeIdeEditControl.Cast() as HWND
+	return _txt
+end operator
 
 '' --------------------------------------------------------
 function CWeeIdeEditControl.GetModify() as BOOL
@@ -29,6 +40,10 @@ function CWeeIdeEditControl.GetSelText() as TString
 	return _txt.GetSelText()
 end function
 
+function CWeeIdeEditControl.ReplaceSel( byref s as TString ) as BOOL
+	return _txt.ReplaceSel( s )
+end function
+
 function CWeeIdeEditControl.GetText() as TString
 	return _txt.GetText()
 end function
@@ -39,6 +54,10 @@ end function
 
 function CWeeIdeEditControl.FindNext( byval fnd as FINDCTX ptr ) as BOOL	
 	return _txt.FindNext( fnd )
+end function
+
+function CWeeIdeEditControl.NextWord() as BOOL	
+	return _txt.NextWord()
 end function
 
 function CWeeIdeEditControl.HideSelection( byval fHide as BOOL, byval fChangeStyle as BOOL ) as BOOL

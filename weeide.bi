@@ -53,7 +53,7 @@ only the return value is needed, state may be set to NULL.
 /'
 WM_APP_FINDTEXT
   wParam = (WPARAM)0             // item identifier
-  lParam = (LPARAM)(FINDCTX*)fnd // address of integer to return new state
+  lParam = (LPARAM)(FINDCTX*)fnd // address of FINDCTX structure
 
 Message sent to main window and dispatched to child windows to
 start/continue a find text operation.
@@ -71,6 +71,19 @@ WM_APP_PAGEINDEXCOMPLETED
 
 Is sent by mkwiki_RefreshPageIndex() to indicate that the operation is complete.
 If fSuccess is non-zero, then the operation completed successfully.
+'/
+
+'' --------------------------------------------------------
+#define WM_APP_SPELLTEXT (WM_APP+4)
+/'
+WM_APP_SPELLTEXT
+  wParam = (WPARAM)0             // item identifier
+  lParam = (LPARAM)(SPELLCTX*)spell // address of SPELLCTX structure
+
+Message sent to main window and dispatched to child windows to
+start/continue a spell check operation.
+
+Returns TRUE if the message was processed
 '/
 
 #endif

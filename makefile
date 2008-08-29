@@ -11,11 +11,15 @@ endif
 MAIN := weeide
 
 SRCS := weeide_about.bas
+
+SRCS += spellcheck.bas
+
 SRCS += weeide_edit.bas
 SRCS += weeide_code.bas
 SRCS += weeide_wiki.bas
 SRCS += weeide_html.bas
 SRCS += weeide_find.bas
+SRCS += weeide_spell.bas
 SRCS += weeide_main.bas
 SRCS += weeide_menu.bas
 

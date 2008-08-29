@@ -25,4 +25,17 @@ type FINDCTX
 	as TCHAR ptr sFind
 end type
 
+enum SPELLCHECKCOMMANDS
+	SPELLCMD_IGNORE = 1
+	SPELLCMD_IGNORE_ALL = 2
+	SPELLCMD_ADD = 3
+	SPELLCMD_CHANGE = 4
+	SPELLCMD_CHANGE_ALL = 5
+end enum
+
+type SPELLCTX
+	as DWORD cmd
+	as TCHAR ptr sWord
+end type
+
 #endif

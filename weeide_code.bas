@@ -136,6 +136,10 @@ function CodeWindow.GetSelText() as TString
 	return _txt.GetSelText()
 end function
 
+function CodeWindow.ReplaceSel( byref s as TString ) as BOOL
+	return _txt.ReplaceSel( s )
+end function
+
 function CodeWindow.GetText() as TString
 	return _txt.GetText()
 end function
@@ -221,7 +225,9 @@ function CodeWindow.OnQueryCommand( byval menuid as UINT, byval state as UINT pt
 
 	select case menuid
 	case IDM_FILE_SAVE, IDM_FILE_SAVE_AS:
-		*state = MF_ENABLED
+		if( state ) then
+			*state = MF_ENABLED
+		end if
 		return TRUE
 
 	end select

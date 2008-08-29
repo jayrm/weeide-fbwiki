@@ -1,0 +1,92 @@
+FBC = fbc.exe
+
+objpath=obj
+
+ifndef FBDOCDIR
+FBDOCDIR := ../../fbdocs/fbdoc
+endif
+
+###########################################################
+
+MAIN := weeide
+
+SRCS := weeide_about.bas
+
+SRCS += spellcheck.bas
+
+SRCS += weeide_main.bas
+SRCS += CWindowProps.bas
+SRCS += weeide_wiki.bas
+SRCS += weeide_code.bas
+SRCS += weeide_edit.bas
+SRCS += weeide_html.bas
+SRCS += weeide_find.bas
+SRCS += weeide_spell.bas
+SRCS += weeide_menu.bas
+
+SRCS += mkwiki.bas
+SRCS += mkwiki_login.bas
+SRCS += mkwiki_getindex.bas
+SRCS += mkwiki_preview.bas
+
+SRCS += TString.bas
+SRCS += CList.bas
+SRCS += CWindow.bas
+SRCS += CApplication.bas
+SRCS += CCodeEditControl.bas
+SRCS += COutputControl.bas
+SRCS += CDocuments.bas
+SRCS += CWindowInfo.bas
+
+SRCS += utils.bas
+
+RESDEPS := $(wildcard res/*.*)
+RESDEPS += resource.bi 
+RESDEPS += weeide_resource.bi
+
+RESHDRS := resource.h weeide_resource.h
+RESHDRS += resource.bi weeide_resource.bi
+
+RCS := resource.rc
+HDRS := $(wildcard *.bi)
+OBJS := $(patsubst %.bas,$(objpath)/%.o,$(MAIN).bas $(SRCS))
+FBCFLAGS := -w pedantic -s gui -i $(FBDOCDIR) -p $(FBDOCDIR) -mt
+
+ifdef DEBUG
+FBCFLAGS += -g -exx
+endif
+
+APP := $(MAIN).exe
+
+.SUFFIXES:
+.SUFFIXES: .bas .bi .h
+
+VPATH = .
+
+###########################################################
+
+$(objpath)/%.o : %.bas $(HDRS) $(RESHDRS)
+	$(FBC) $(FBCFLAGS) -c $< -o $@
+#-m $(MAIN)
+
+###########################################################
+
+all : $(APP)
+
+$(APP) : $(OBJS) $(RCS) $(RESDEPS)
+	$(FBC) $(FBCFLAGS) $(OBJS) $(RCS) -x $(APP)
+
+$(RCS) : weeide.rc2 $(RESDEPS) $(RESHDRS)
+	cleanrc.exe weeide.rc2 $(RCS)
+
+resource.bi : resource.h
+	cleanrc.exe resource.h resource.bi
+
+weeide_resource.bi : weeide_resource.h
+	cleanrc.exe weeide_resource.h weeide_resource.bi
+
+###########################################################
+
+.PHONY : clean
+clean:
+	-rm -f $(OBJS) $(APP)

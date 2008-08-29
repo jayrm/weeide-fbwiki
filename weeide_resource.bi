@@ -36,6 +36,7 @@
 	#define IDM_WIKI_LOGIN              701
 	#define IDM_WIKI_PAGELIST           702
 	#define IDM_WIKI_PREVIEW            703
+	#define IDM_WIKI_SPELLCHECK         704
 
 #define IDM_WINDOW                      800
 
@@ -88,3 +89,15 @@
 
 #define IDC_LOGIN_USER                  3201
 #define IDC_LOGIN_PWD                   3202
+
+#define IDD_SPELLCHECK                  3300
+
+#define IDC_SPELL_WORD_LABEL            3301
+#define IDC_SPELL_WORD_EDIT             3302
+#define IDC_SPELL_SUGGEST_LABEL         3303
+#define IDC_SPELL_SUGGEST_LIST          3304
+#define IDC_SPELL_IGNORE                3305
+#define IDC_SPELL_IGNORE_ALL            3306
+#define IDC_SPELL_ADD                   3307
+#define IDC_SPELL_CHANGE                3308
+#define IDC_SPELL_CHANGE_ALL            3309

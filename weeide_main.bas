@@ -14,6 +14,7 @@
 #include once "weeide_html.bi"
 #include once "weeide_main.bi"
 #include once "utils.bi
+#include once "spellcheck.bi"
 
 #include once "mkwiki.bi"
 
@@ -83,6 +84,30 @@ function WeeIdeChild_FindNext( byval hwnd as HWND, byval fnd as FINDCTX ptr ) as
 
 end function
 
+function WeeIdeChild_GetText( byval hwnd as HWND ) as TString
+
+	select case( CWindowInfo.GetWindowType( hwnd ) )
+	
+	case WID_CODEWINDOW:
+	
+		dim as CodeWindow ptr frm = GetCodeWindowPtr( hwnd )
+		if( frm ) then
+			return frm->GetText()
+		end if
+	
+	case WID_WIKIWINDOW:
+	
+		dim as WikiWindow ptr frm = GetWikiWindowPtr( hwnd )
+		if( frm ) then
+			return frm->GetText()
+		end if
+	
+	end select
+
+	return TEXT( "" )
+
+end function
+
 function WeeIdeChild_GetSelText( byval hwnd as HWND ) as TString
 
 	select case( CWindowInfo.GetWindowType( hwnd ) )
@@ -104,6 +129,47 @@ function WeeIdeChild_GetSelText( byval hwnd as HWND ) as TString
 	end select
 
 	return TEXT( "" )
+
+end function
+
+function WeeIdeChild_ReplaceSel( byval hwnd as HWND, byref s as TString ) as BOOL
+
+	select case( CWindowInfo.GetWindowType( hwnd ) )
+	
+	case WID_CODEWINDOW:
+	
+		dim as CodeWindow ptr frm = GetCodeWindowPtr( hwnd )
+		if( frm ) then
+			return frm->ReplaceSel( s )
+		end if
+	
+	case WID_WIKIWINDOW:
+	
+		dim as WikiWindow ptr frm = GetWikiWindowPtr( hwnd )
+		if( frm ) then
+			return frm->ReplaceSel( s )
+		end if
+	
+	end select
+
+	return TRUE
+
+end function
+
+function WeeIdeChild_NextWord( byval hwnd as HWND ) as BOOL
+
+	select case( CWindowInfo.GetWindowType( hwnd ) )
+	
+	case WID_WIKIWINDOW:
+	
+		dim as WikiWindow ptr frm = GetWikiWindowPtr( hwnd )
+		if( frm ) then
+			return frm->NextWord()
+		end if
+	
+	end select
+
+	return FALSE
 
 end function
 
@@ -192,12 +258,17 @@ constructor MainWindow()
 	_hwndList = NULL
 	_fixedfnt = NULL
 	_swissfnt = NULL
+	frmSpell = NULL
 end constructor
 
 destructor MainWindow()
 	
 	if( frmFind ) then
 		delete frmFind
+	end if
+
+	if( frmSpell ) then
+		delete frmSpell
 	end if
 
 	if( _fixedfnt ) then
@@ -209,6 +280,8 @@ destructor MainWindow()
 		DeleteObject( _swissfnt )
 		_swissfnt = NULL
 	end if
+
+	SpellCheck_Exit()
 
 end destructor
 
@@ -568,14 +641,14 @@ function MainWindow.CmdFind( byval bNext as BOOL ) as BOOL
 	end if
 
 	'' Show CFindDialog set with the highlighted text in the active child window (frm)
-	dim as TString s '' !!! frm->GetSelText()
+	dim as TString s = WeeIdeChild_GetSelText( child )
 
 	if( s.GetLength() > 0 ) then
 		frmFind->SetFindText( s )
 	end if
 
 	frmFind->Show()
-	'' !!! frm->HideSelection( FALSE, FALSE )
+	WeeIdeChild_HideSelection( child, FALSE, FALSE )
 
 	return TRUE
 
@@ -690,13 +763,13 @@ function MainWindow.CmdWikiPreview() as BOOL
 				if( doc ) then
 					frmHtml = GetHtmlWindowPtr( doc->GetHwnd() )
 					if( frmHtml ) then
-						frmHtml->Navigate( "file://" + curdir + "/html/" + sPage + ".html" )
+						frmHtml->Navigate( "file://" + exepath() + "/html/" + sPage + ".html" )
 						SetFocus( frmHtml->GetHwnd() )
 					end if
 				else
 					frmHtml = HtmlWindow.InitInstance( WID_HTMLWINDOW, _hwndMDI, title )
 					if( frmHtml ) then
-						frmHtml->Navigate( "file://" + curdir + "/html/" + sPage + ".html" )
+						frmHtml->Navigate( "file://" + exepath() + "/html/" + sPage + ".html" )
 					end if
 				end if
 			end if
@@ -705,6 +778,84 @@ function MainWindow.CmdWikiPreview() as BOOL
 
 	return FALSE
 	
+end function
+
+function MainWindow.CmdWikiSpellCheck( byval bNext as BOOL ) as BOOL
+
+	if( frmSpell = NULL ) then
+		frmSpell = CSpellCheckDialog.InitInstance( _hwnd )
+		bNext = FALSE
+	end if
+
+	if( frmSpell = NULL ) then
+		return FALSE
+	end if
+
+	dim as CWindow child = GetActiveChild()
+
+	if( child.IsNull() ) then
+		return FALSE
+	end if
+
+	if( CWindowInfo.GetWindowType( child ) <> WID_WIKIWINDOW ) then
+		return FALSE
+	end if
+
+	dim as TString s 
+	dim word as string
+	dim bHaveWord as BOOL
+	dim bBad as BOOL = FALSE
+	dim range as CHARRANGE
+	dim as WikiWindow ptr frm = GetWikiWindowPtr( child )
+
+	if( bNext ) then
+		bHaveWord = WeeIdeChild_NextWord( child )
+	else
+		s = WeeIdeChild_GetSelText( child )
+		if( s.GetLength() = 0 ) then
+			bHaveWord = WeeIdeChild_NextWord( child )
+		else
+			bHaveWord = TRUE
+		end if
+	end if
+
+	SendMessage( frm->GetEditHwnd(), EM_EXGETSEL, 0, cast(LPARAM,@range ))
+
+	while( bHaveWord )
+
+		s = WeeIdeChild_GetSelText( child )
+
+		if( s.GetLength() > 0 ) then
+			word = *cast( LPTSTR, s )
+
+			if( SpellCheck_Word( word ) = FALSE ) then
+
+				frmSpell->SetCheckText( s )
+				frmSpell->Show()
+				WeeIdeChild_HideSelection( child, FALSE, FALSE )
+				bBad = TRUE
+
+				exit while
+
+			end if
+
+		else
+			exit while
+
+		end if
+
+		bHaveWord = WeeIdeChild_NextWord( child )
+
+	wend
+
+	if( bBad = FALSE ) then
+		frmSpell->Hide()
+		SendMessage( frm->GetEditHwnd(), EM_EXSETSEL, 0, cast(LPARAM,@range ))
+		Application.MessageBox( TEXT( "Spell check complete" ) )
+	end if
+
+	return TRUE
+
 end function
 
 '' --------------------------------------------------------
@@ -781,7 +932,7 @@ function MainWindow.OnPageIndexCompleted( byval wParam as WPARAM, byval lParam a
 end function
 
 '' --------------------------------------------------------
-'' WM_APP_QUERYCOMMAND
+'' WM_APP_FINDTEXT
 '' --------------------------------------------------------
 function MainWindow.OnFindNext( byval wParam as WPARAM, byval lParam as LPARAM ) as BOOL
 
@@ -845,6 +996,50 @@ function MainWindow.OnFindNext( byval wParam as WPARAM, byval lParam as LPARAM )
 
 	'' Not found, show message
 	Application.MessageBox( TEXT( "Text was not found" ) )
+
+	return FALSE
+
+end function
+
+'' --------------------------------------------------------
+'' WM_APP_SPELLTEXT
+'' --------------------------------------------------------
+function MainWindow.OnSpellNext( byval wParam as WPARAM, byval lParam as LPARAM ) as BOOL
+
+	dim as CWindow firstchild = GetActiveChild()
+	dim as CDocumentItem ptr doc = Docs.FindByHwnd( firstchild )
+	dim as SPELLCTX spell = *(cast(SPELLCTX ptr, lParam))
+
+	if( doc = NULL ) then
+		return FALSE
+	end if
+
+	if( WeeIdeChild_OnQueryCommand( doc->GetHwnd(), IDM_WIKI_SPELLCHECK, NULL ) = FALSE ) then
+		return FALSE
+	end if
+
+	select case spell.cmd
+	case SPELLCMD_IGNORE:
+		return CmdWikiSpellCheck( TRUE )
+
+	case SPELLCMD_IGNORE_ALL:
+		return CmdWikiSpellCheck( TRUE )
+
+	case SPELLCMD_ADD:
+		return CmdWikiSpellCheck( TRUE )
+
+	case SPELLCMD_CHANGE:
+		WeeIdeChild_ReplaceSel( doc->GetHwnd(), spell.sWord )
+		return CmdWikiSpellCheck( TRUE )
+
+	case SPELLCMD_CHANGE_ALL:
+		WeeIdeChild_ReplaceSel( doc->GetHwnd(), spell.sWord )
+		return CmdWikiSpellCheck( TRUE )
+
+	case else
+		return FALSE
+
+	end select
 
 	return FALSE
 
@@ -969,6 +1164,9 @@ function MainWindow.OnCommand(  byval wParam as WPARAM, byval lParam as LPARAM  
 	case IDM_WIKI_PREVIEW:
 		return CmdWikiPreview()
 
+	case IDM_WIKI_SPELLCHECK:
+		return CmdWikiSpellCheck( TRUE )
+
 	case IDC_MAIN_LIST:
 		if( HIWORD( wParam ) = LBN_DBLCLK ) then
 			OnListDblClick()
@@ -1062,6 +1260,9 @@ function MainWindow.WindowProc( _
 
 	case WM_APP_PAGEINDEXCOMPLETED:
 		return _this->OnPageIndexCompleted( wParam, lParam )
+
+	case WM_APP_SPELLTEXT:
+		return _this->OnSpellNext( wParam, lParam )
 
 	case WM_SIZE:
 		_this->OnSize( LOWORD(lParam), HIWORD(lParam) )

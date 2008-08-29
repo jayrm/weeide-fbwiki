@@ -34,6 +34,11 @@ function WikiWindow.GetHwnd() as HWND
 	return _hwnd
 end function
 
+function WikiWindow.GetEditHwnd() as HWND
+	return _txt.GetHwnd()
+end function
+
+
 '' --------------------------------------------------------
 sub WikiWindow.UpdateWindowTitle( byval bForce as BOOL )
 	'' !!! wnd.UpdateWindowTitle( bForce )
@@ -142,6 +147,10 @@ function WikiWindow.GetSelText() as TString
 	return _txt.GetSelText()
 end function
 
+function WikiWindow.ReplaceSel( byref s as TString ) as BOOL
+	return _txt.ReplaceSel( s )
+end function
+
 function WikiWindow.GetText() as TString
 	return _txt.GetText()
 end function
@@ -152,6 +161,10 @@ end function
 
 function WikiWindow.FindNext( byval fnd as FINDCTX ptr ) as BOOL	
 	return _txt.FindNext( fnd )
+end function
+
+function WikiWindow.NextWord() as BOOL	
+	return _txt.NextWord()
 end function
 
 function WikiWindow.HideSelection( byval fHide as BOOL, byval fChangeStyle as BOOL ) as BOOL
@@ -245,11 +258,15 @@ function WikiWindow.OnQueryCommand( byval menuid as UINT, byval state as UINT pt
 	
 	select case menuid
 	case IDM_FILE_SAVE:
-		*state = MF_ENABLED
+		if( state ) then
+			*state = MF_ENABLED
+		end if
 		return TRUE
 
-	case IDM_WIKI_PREVIEW:
-		*state = MF_ENABLED
+	case IDM_WIKI_PREVIEW, IDM_WIKI_SPELLCHECK:
+		if( state ) then
+			*state = MF_ENABLED
+		end if
 		return TRUE
 
 	end select

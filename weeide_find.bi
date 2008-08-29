@@ -1,7 +1,6 @@
 #ifndef __WEEIDE_FIND_INCLUDE__
 #define __WEEIDE_FIND_INCLUDE__
 
-'' Need this because we are reusing the FINDREPLACE structure
 #include once "win/commdlg.bi"
 
 type CFindDialog

@@ -42,6 +42,7 @@ type CodeWindow
 		declare function GetModify() as BOOL
 		declare function SetModify( byval flag as BOOL ) as BOOL
 		declare function GetSelText() as TString
+		declare function ReplaceSel( byref s as TString ) as BOOL
 		declare function GetText() as TString
 		declare function SetText( byref s as TString ) as BOOL
 

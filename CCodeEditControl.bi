@@ -20,6 +20,7 @@ type CCodeEditControl
 		declare constructor ()
 		declare destructor ()
 
+		declare function GetHwnd() as HWND
 		declare operator cast() as HWND
 
 		declare static function WordBreakProc _
@@ -33,6 +34,7 @@ type CCodeEditControl
 		declare function GetModify() as BOOL
 		declare function SetModify( byval flag as BOOL ) as BOOL
 		declare function GetSelText() as TString
+		declare function ReplaceSel( byref s as TString ) as BOOL
 		declare function GetText() as TString
 		declare function SetText( byref s as TString ) as BOOL
 
@@ -56,6 +58,7 @@ type CCodeEditControl
 		declare function SaveFile( byval filename as TCHAR ptr ) as BOOL
 		declare function TabIndent( byval bOutdent as BOOL ) as BOOL
 		declare function FindNext( byval fnd as FINDCTX ptr ) as BOOL
+		declare function NextWord() as BOOL
 		declare function HideSelection( byval fHide as BOOL, byval fChangeStyle as BOOL ) as BOOL
 
 end type

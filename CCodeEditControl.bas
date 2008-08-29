@@ -32,6 +32,11 @@ destructor CCodeEditControl()
 end destructor
 
 ''
+function CCodeEditControl.GetHwnd() as HWND
+	return _hwnd
+end function
+
+''
 operator CCodeEditControl.Cast() as HWND
 	return _hwnd
 end operator
@@ -166,6 +171,66 @@ function CCodeEditControl.FindNext( byval fnd as FINDCTX ptr ) as BOOL
 	end if
 	
 	return FALSE
+
+end function
+
+''
+function CCodeEditControl.NextWord() as BOOL
+
+	dim as CHARRANGE range
+	dim as integer n
+	SendMessage( _hwnd, EM_EXGETSEL, 0, cast(LPARAM, @range ))
+
+	dim as GETTEXTLENGTHEX tlenex = (0, 0)
+	n = SendMessage( _hwnd, EM_GETTEXTLENGTHEX, cast(WPARAM, @tlenex), 0 )
+
+	if( range.cpMin <> range.cpMax ) then
+	
+		range.cpMin = range.cpMax
+	
+	end if
+
+	if( range.cpMin = range.cpMax ) then
+	
+		'' Skip over non-word characters
+		while( range.cpMin < n )
+		
+			if( SendMessage( _hwnd, EM_FINDWORDBREAK, WB_CLASSIFY, range.cpMin ) = 0 ) then
+				exit while
+			end if
+			range.cpMin += 1
+
+		wend
+		range.cpMax = range.cpMin
+
+		'' Move to beginning of word
+		while( range.cpMin > 0 )
+		
+			if( SendMessage( _hwnd, EM_FINDWORDBREAK, WB_CLASSIFY, range.cpMin - 1) <> 0 ) then
+				exit while
+			end if
+			range.cpMin -= 1
+		
+		wend
+
+		'' Scan to end of word
+		while( range.cpMax < n )
+		
+			if( SendMessage( _hwnd, EM_FINDWORDBREAK, WB_CLASSIFY, range.cpMax ) <> 0 ) then
+				exit while
+			end if
+			range.cpMax += 1
+		
+		wend
+
+	end if
+
+	if( range.cpMin >= range.cpMax ) then
+		return FALSE
+	end if
+	
+	SendMessage( _hwnd, EM_EXSETSEL, 0, cast(LPARAM, @range) )
+	return TRUE
 
 end function
 
@@ -407,6 +472,14 @@ function CCodeEditControl.GetSelText() as TString
 
 end function
 
+function CCodeEditControl.ReplaceSel( byref s as TString ) as BOOL
+
+	SendMessage( _hwnd, EM_REPLACESEL, TRUE, cast(LPARAM, s.GetPtr()) )
+
+	return TRUE
+
+end function
+
 function CCodeEditControl.GetText() as TString
 	return _hwnd.GetText()
 end function
@@ -552,8 +625,6 @@ function CCodeEditControl.Create _
 		_fnt = CreateFixedFont( -11 )
 		SendMessage( _hwnd, WM_SETFONT, cast( WPARAM, _fnt ), TRUE )
 
-		'' We could also use our custom word/break proc
-		'' But using the default makes it same as when editing wiki online.
 		if( WordWrap = FALSE ) then
 			SendMessage( _hwnd, EM_SETWORDBREAKPROC, 0, cast(LPARAM, procptr(CCodeEditControl.WordBreakProc)) )
 		end if

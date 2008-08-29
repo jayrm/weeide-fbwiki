@@ -5,6 +5,7 @@
 #include once "CWindowInfo.bi"
 #include once "COutputControl.bi"
 #include once "weeide_find.bi"
+#include once "weeide_spell.bi"
 
 type MainWindow
 
@@ -20,6 +21,7 @@ type MainWindow
 		as HFONT _fixedfnt
 		as HFONT _swissfnt
 		as CWindowInfo _info
+		as CSpellCheckDialog ptr frmSpell
 
 		declare function SelfRegister() as BOOL
 
@@ -49,6 +51,7 @@ type MainWindow
 		declare function OnQueryCommand( byval menuid as UINT, byval state as UINT ptr ) as BOOL
 		declare function OnCommand( byval wParam as WPARAM, byval lParam as LPARAM ) as BOOL
 		declare function OnFindNext( byval wParam as WPARAM, byval lParam as LPARAM ) as BOOL
+		declare function OnSpellNext( byval wParam as WPARAM, byval lParam as LPARAM ) as BOOL
 		declare function OnPageIndexCompleted( byval wParam as WPARAM, byval lParam as LPARAM ) as BOOL
 		declare function OnSize( byval nWidth as integer, byval nHeight as integer ) as BOOL
 		declare function OnClose() as BOOL
@@ -73,6 +76,7 @@ type MainWindow
 		declare function CmdWikiPageList( byval bForce as BOOL ) as BOOL
 		declare function CmdWikiOpen( byref pagename as TString ) as BOOL
 		declare function CmdWikiPreview() as BOOL
+		declare function CmdWikiSpellCheck( byval bNext as BOOL ) as BOOL
 		
 		'' LIST
 		declare function OnListDblClick() as BOOL

@@ -19,6 +19,9 @@ type CWeeIdeEditControl
 		declare constructor ()
 		declare destructor ()
 
+		declare function GetHwnd() as HWND
+		declare operator cast() as HWND
+
 		declare function Create _
 			( _
 				byval wordwrap as BOOL, _
@@ -38,6 +41,7 @@ type CWeeIdeEditControl
 		declare function SetModify( byval flag as BOOL ) as BOOL
 
 		declare function GetSelText() as TString
+		declare function ReplaceSel( byref s as TSTring ) as BOOL
 		declare function GetText() as TString
 		declare function SetText( byref s as TString ) as BOOL
 
@@ -54,6 +58,7 @@ type CWeeIdeEditControl
 		declare function OpenFile( byval filename as TCHAR ptr ) as BOOL
 		declare function SaveFile( byval filename as TCHAR ptr ) as BOOL
 		declare function FindNext( byval fnd as FINDCTX ptr ) as BOOL
+		declare function NextWord() as BOOL
 		declare function HideSelection( byval fHide as BOOL, byval bChangeStyle as BOOL ) as BOOL
 
 end type

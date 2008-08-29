@@ -66,13 +66,13 @@ function HtmlPreview_Generate _
 	Lang.SetOption("fb_docinfo_date", Format( Now(), Lang.GetOption("fb_docinfo_dateformat")))
 	Lang.SetOption("fb_docinfo_time", Format( Now(), Lang.GetOption("fb_docinfo_timeformat")))
 
-	dim as CPageList ptr paglist, toclist
+	dim as CPageList ptr paglist, toclist, lnklist = NULL
 
 	FBDoc_BuildSinglePage( sPage, sPage, @paglist, @toclist, FALSE )
 
 	'' Generate HTML
 	dim as CWiki2Chm ptr chm
-	chm = new CWiki2Chm( @"", 1, sOutputDir, paglist, toclist )
+	chm = new CWiki2Chm( @"", 1, sOutputDir, paglist, toclist, lnklist )
 	chm->Emit()
 	delete chm
 

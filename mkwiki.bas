@@ -65,8 +65,8 @@ end function
 
 function mkwiki_Create() as integer
 
-	'' wiki_url = "http://myweb:8080/wiki/wikka.php"
-	wiki_url = "http://www.freebasic.net/wiki/wikka.php"
+	wiki_url = "http://myweb:8080/wiki/wikka.php"
+	'' wiki_url = "http://www.freebasic.net/wiki/wikka.php"
 
 	sCacheDir = exepath() + "/cache/"
 
@@ -149,7 +149,7 @@ function mkwiki_LoadPageIndexToList( byval ctl as HWND ) as integer
 
 		dim h as integer
 		h = FreeFile
-		if( open( "PageIndex.txt" for input access read as #h ) = 0 ) then
+		if( open( exepath + "/PageIndex.txt" for input access read as #h ) = 0 ) then
 			while eof(h) = 0
 				line input #h, x
 				if x > "" then

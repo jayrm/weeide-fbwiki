@@ -88,6 +88,9 @@ function WinMain stdcall alias "WinMain" _
 	HtmlPreview_Init( exepath() + "/" )
 
 	'' frmMain->CmdNew();
+	dim as TString f 
+	f = TEXT( "JeffMarshall" )
+	frmMain->CmdWikiOpen( f )
 
 	while( TRUE )
 		ret = GetMessage( @wMsg, NULL, 0, 0 )

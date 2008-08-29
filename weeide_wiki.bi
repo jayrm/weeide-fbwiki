@@ -34,6 +34,7 @@ type WikiWindow
 			) as LRESULT
 
 		declare function GetHwnd() as HWND
+		declare function GetEditHwnd() as HWND
 
 		declare function GetTitle() as TString
 		declare sub SetTitle( byref title as TString )
@@ -45,6 +46,7 @@ type WikiWindow
 		declare function GetModify() as BOOL
 		declare function SetModify( byval flag as BOOL ) as BOOL
 		declare function GetSelText() as TString
+		declare function ReplaceSel( byref s as TString ) as BOOL
 		declare function GetText() as TString
 		declare function SetText( byref s as TString ) as BOOL
 
@@ -57,6 +59,7 @@ type WikiWindow
 		declare function OpenFile( byref filename as TString ) as BOOL
 		declare function SaveFile( byval bForcePrompt as BOOL = FALSE ) as BOOL
 		declare function FindNext( byval fnd as FINDCTX ptr ) as BOOL
+		declare function NextWord() as BOOL
 		declare function HideSelection( byval fHide as BOOL, byval bChangeStyle as BOOL ) as BOOL
 
 end type

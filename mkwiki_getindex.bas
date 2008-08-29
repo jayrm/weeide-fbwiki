@@ -128,7 +128,7 @@ private function ScanForPageNames( byref sTxt as string ) as string
 					case else
 					  exit for
 					end select
-				next i
+				next
 				if k > 1 then
 					ret += left(x,k-1) + chr(10)
 				end if
@@ -191,7 +191,7 @@ public sub RefreshPageIndex ( byval bForceDownload as integer )
 	dim bDownload as integer = FALSE
 
 	if( bForceDownload = FALSE ) then
-		if( fileexists( "PageIndex.txt" ) = FALSE ) then
+		if( fileexists( exepath + "/PageIndex.txt" ) = FALSE ) then
 			bDownload = TRUE
 		end if
 	else
@@ -199,7 +199,7 @@ public sub RefreshPageIndex ( byval bForceDownload as integer )
 	end if
 
 	if( bDownload ) then
-		GetPageIndex( "PageIndex.txt" )
+		GetPageIndex( exepath + "/PageIndex.txt" )
 	end if
 
 end sub
