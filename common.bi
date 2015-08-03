@@ -10,6 +10,7 @@
 #endif
 
 
+
 enum FINDFLAGS
 	FINDFLAG_NONE = 0
 	FINDFLAG_UP = 1

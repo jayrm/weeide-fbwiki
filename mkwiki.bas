@@ -65,7 +65,9 @@ end function
 
 function mkwiki_Create() as integer
 
-	wiki_url = "http://myweb:8080/wiki/wikka.php"
+	'' $$$ TODO: should not be hard code
+	wiki_url = "http://myweb/fbwiki/wikka.php"
+
 	'' wiki_url = "http://www.freebasic.net/wiki/wikka.php"
 
 	sCacheDir = exepath() + "/cache/"

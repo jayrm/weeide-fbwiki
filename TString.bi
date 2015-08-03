@@ -43,9 +43,9 @@ type TString
 		declare operator +=( byval s as TCHAR ptr )
 		declare operator +=( byval s as LPTSTR )
 
-		declare operator cast() as TCHAR ptr
 		declare operator cast() as LPCTSTR
-		declare function GetPtr() as TCHAR ptr
+		declare operator cast() as TCHAR ptr
+		declare function GetPtr() as zstring ptr
 
 		declare static function ToStr( byval number as integer ) as TString
 end type

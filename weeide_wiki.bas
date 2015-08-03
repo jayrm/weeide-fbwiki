@@ -403,7 +403,7 @@ function WikiWindow.SelfRegister() as BOOL
 		if( RegisterClass( @wcls ) = FALSE ) then
 		
 			Application.ErrorMessage( GetLastError(), TEXT( "Could not register the WikiWindow class" ))
-			return NULL
+			return FALSE
 		end if
 
 		bClassRegistered = TRUE

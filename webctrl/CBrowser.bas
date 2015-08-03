@@ -2,7 +2,7 @@
 '' CBrowser - the browser "class"
 ''
 
-#include once "Common.bi
+#include once "Common.bi"
 #include once "CBrowser.bi"
 
 type CBrowserCtx
@@ -257,9 +257,9 @@ function CBrowser.navigate _
 	
 	if( vURL.bstrVal <> NULL ) then
 		function = (ctx->browser->lpVtbl->Navigate2( ctx->browser, _
-												 	   iif( url <> NULL, @vURL, NULL ), _
+												 	   iif( url <> NULL, @vURL, 0 ), _
 												 	   NULL, _
-												 	   iif( target <> NULL, @vTarget, NULL ), _
+												 	   iif( target <> NULL, @vTarget, 0 ), _
 												 	   NULL, _
 												 	   NULL ) = S_OK )
 	end if
@@ -280,6 +280,7 @@ function CBrowser.render _
 	) as BOOL
 
 	dim as IDispatch ptr doc
+
 	dim as IHTMLDocument2 ptr htmldoc2
 	dim as BOOL res
 

@@ -13,7 +13,7 @@
 #include once "weeide_wiki.bi"
 #include once "weeide_html.bi"
 #include once "weeide_main.bi"
-#include once "utils.bi
+#include once "utils.bi"
 #include once "spellcheck.bi"
 
 #include once "mkwiki.bi"
@@ -329,7 +329,7 @@ private function MainWindow.SelfRegister() as BOOL
 		'' Register the window class     
 		if( RegisterClass( @wcls ) = FALSE ) then
 			Application.ErrorMessage( GetLastError(), TEXT( "Could not register the window class" ))
-			return NULL
+			return FALSE
 		end if
 
 		bClassRegistered = TRUE

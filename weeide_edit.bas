@@ -96,7 +96,7 @@ function CWeeIdeEditControl.Create( byval bWordWrap as BOOL, byval rc as RECT pt
 
 	'' must have a parent
 	if( hwndParent = NULL ) then
-		return NULL
+		return FALSE
 	end if
 
 	return _txt.Create( bWordWrap, rc, hwndParent, nID )
@@ -175,7 +175,7 @@ function CWeeIdeEditControl.OnCommand( byval wParam as WPARAM, byval lParam as L
 	case IDM_EDIT_COPY:
 		return SendMessage( _txt, WM_COPY, 0, 0 )
 	case IDM_EDIT_PASTE:
-		return SendMessage( _txt, EM_PASTESPECIAL, CF_TEXT, NULL )
+		return SendMessage( _txt, EM_PASTESPECIAL, CF_TEXT, cast(..LPARAM, NULL) )
 	case IDM_EDIT_DELETE:
 		return SendMessage( _txt, WM_CLEAR, 0, 0 )
 	case IDM_EDIT_SELECTALL:

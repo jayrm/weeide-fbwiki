@@ -57,9 +57,9 @@ CFG=weeide_fb - Win32 Debug
 # PROP Use_Debug_Libraries 1
 # PROP Output_Dir "Debug"
 # PROP Intermediate_Dir "Debug"
-# PROP Cmd_Line "e:\fb\fbtools\weeide.fb\mk.bat"
+# PROP Cmd_Line "e:\fb\fbdocs\weeide.fb\mk.bat"
 # PROP Rebuild_Opt ""
-# PROP Target_File "e:\fb\fbtools\weeide.fb\weeide.exe"
+# PROP Target_File "e:\fb\fbdocs\weeide.fb\weeide.exe"
 # PROP Bsc_Name ""
 # PROP Target_Dir ""
 
@@ -420,5 +420,13 @@ SOURCE=.\webctrl\webctrl.bas
 SOURCE=.\webctrl\webctrl.bi
 # End Source File
 # End Group
+# Begin Source File
+
+SOURCE=.\list.txt
+# End Source File
+# Begin Source File
+
+SOURCE=.\notes.txt
+# End Source File
 # End Target
 # End Project

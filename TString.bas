@@ -228,6 +228,7 @@ function TString.Concat( byval s as TCHAR ptr ) as BOOL
 end function
 
 ''
+
 operator TString.let( byref s as TString )
 	Assign( s )
 end operator
@@ -286,8 +287,8 @@ operator TString.Cast() as LPCTSTR
 end operator
 
 ''
-function TString.GetPtr() as TCHAR ptr
-	return cast(TCHAR ptr, _data)
+function TString.GetPtr() as zstring ptr
+	return cast(zstring ptr, _data)
 end function
 
 ''

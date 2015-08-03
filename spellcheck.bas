@@ -3,16 +3,28 @@
 
 #include once "weeide.bi"
 
+#ifdef SPELL_CHECK_ENABLE
 #include once "aspell.bi"
+#endif
 
+#ifndef FALSE
 #define FALSE 0
+#endif
+
+#ifndef TRUE
 #define TRUE 1
+#endif
+
+#ifndef NULL
 #define NULL 0
+#endif
 
 #define MAX_WORDS 100
 
+#ifdef SPELL_CHECK_ENABLE
 dim shared as AspellConfig ptr spell_config = NULL
 dim shared as AspellSpeller ptr spell_checker = NULL
+#endif
 dim shared as string wordlist(0 to MAX_WORDS - 1)
 dim shared as integer wordcount = 0
 
@@ -30,7 +42,7 @@ sub WORDS_Clear()
 end sub
 
 ''
-sub WORDS_Add( byref word as string )
+sub WORDS_Add( byref word as const string )
 	if( wordcount < MAX_WORDS ) then
 		wordlist( wordcount ) = word
 		wordcount += 1
@@ -40,6 +52,7 @@ end sub
 ''
 function SpellCheck_Init() as integer
 
+#ifdef SPELL_CHECK_ENABLE
 	dim as AspellCanHaveError ptr possible_err
 
 	function = FALSE
@@ -49,7 +62,7 @@ function SpellCheck_Init() as integer
 	possible_err = new_aspell_speller( spell_config ) 
 
 	if( aspell_error_number(possible_err) <> 0 ) then
-		Application.MessageBox( aspell_error_message( possible_err ) )
+		Application.MessageBox( *aspell_error_message( possible_err ) )
 		exit function
 
 	else
@@ -68,27 +81,30 @@ function SpellCheck_Init() as integer
 	next
 
 	function = TRUE
+#else
+	function = FALSE
+#endif
 
 end function
 
 ''
 function SpellCheck_Exit() as integer
-
+#ifdef SPELL_CHECK_ENABLE
 	if( spell_checker ) then
 		delete_aspell_speller( spell_checker )
 	end if
-
+#endif
 	function = TRUE
 	
 end function
 
 ''
 function SpellCheck_Word( byref input_word as string ) as integer
-
+#ifdef SPELL_CHECK_ENABLE
 	dim as integer correct
-	dim as AspellWordList ptr suggestions
+	dim as const AspellWordList ptr suggestions
 	dim as AspellStringEnumeration ptr elements
-	dim as zstring ptr word
+	dim as const zstring ptr word
 
 	function = FALSE
 
@@ -132,7 +148,9 @@ function SpellCheck_Word( byref input_word as string ) as integer
 
 	' - Add to session or personal dictionary
 	'aspell_speller_add_to_session|personal(spell_checker, word, size)
-
+#else
+	function = FALSE
+#endif
 end function
 
 ''

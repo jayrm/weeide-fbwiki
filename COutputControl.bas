@@ -75,7 +75,7 @@ function COutputControl.SelfRegister() as BOOL
 		'' superclass the richedit control
 		if( GetClassInfo( _hInstance, TEXT( "EDIT" ), @wcls ) = FALSE ) then
 			Application.ErrorMessage( GetLastError(), TEXT( "Unable to superclass the edit control." ))
-			return NULL
+			return FALSE
 		end if
 
 		'' save this, we'll need it later.
@@ -90,7 +90,7 @@ function COutputControl.SelfRegister() as BOOL
 		'' Register the superclassed richedit class     
 		if( RegisterClass( @wcls ) = FALSE ) then
 			Application.ErrorMessage( GetLastError(), TEXT( "Could not register the Output class" ))
-			return NULL
+			return FALSE
 		end if
 
 		bClassRegistered = TRUE

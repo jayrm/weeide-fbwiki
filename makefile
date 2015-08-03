@@ -3,7 +3,7 @@ FBC = fbc.exe
 objpath=obj
 
 ifndef FBDOCDIR
-FBDOCDIR := ../../fbdocs/fbdoc
+FBDOCDIR := ../fbdocs/fbdoc
 endif
 
 ###########################################################

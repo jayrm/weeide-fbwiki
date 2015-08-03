@@ -1,5 +1,9 @@
 call c:\batch\setpath.bat FBWIN
 e:
-cd \fb\fbtools\weeide.fb
+cd \fb\fbdocs\weeide.fb
 REM make clean
-make -f makefile.jef DEBUG=1
+cd webctrl 
+make DEBUG=1
+cd ..
+make -f makefile.jef DEBUG=1 FBDOCDIR=d:/fb.git/doc/libfbdoc
+copy weeide.exe  e:\fb\fbdocs\manual\weeide.exe

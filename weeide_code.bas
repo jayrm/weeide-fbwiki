@@ -328,7 +328,7 @@ function CodeWindow.SelfRegister() as BOOL
 		if( RegisterClass( @wcls ) = FALSE ) then
 		
 			Application.ErrorMessage( GetLastError(), TEXT( "Could not register the CodeWindow class" ))
-			return NULL
+			return FALSE
 		end if
 
 		bClassRegistered = TRUE

@@ -1,0 +1,30 @@
+compiling aspell from sources
+
+./configure
+--disable-nls
+--prefix="c:/aspell"
+--with-gnu-ld
+--enable-static
+--enable-shared
+--enable-compile-in-filters
+(could not make --enable-win32-relocatable work)
+
+only run perl outside of 'sh'
+
+add "asc_ctypes.hpp" to common/file_util.cpp
+
+edit libtool and change pthread to pthreadGC2
+
+make
+
+on fail - fix the dirs.h header
+
+make
+
+on fail run mkfilters.bat
+perl gen/mk-static-filter.pl modules/filter/url-filter.info modules/filter/email-filter.info modules/filter/tex-filter.info modules/filter/sgml-filter.info modules/filter/html-filter.info modules/filter/context-filter.info modules/filter/nroff-filter.info modules/filter/texinfo-filter.info
+
+make
+
+make install
+

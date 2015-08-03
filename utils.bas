@@ -8,9 +8,15 @@ static shared as WCHAR ptr linebreaks = @WSTR(!"\r\n")
 static shared as WCHAR ptr delimiters = @WSTR(!"`~!$%^&*()-=+[]{};:'\",.<>/?|\\")
 static shared as WCHAR ptr extrasymbs = @WSTR(!"_@#")
 
-'' We don't have this in win*.bi
+#ifndef GetStringTypeW
+'' If we don't have this in win*.bi
 declare function GetStringTypeW alias "GetStringTypeW" ( byval as DWORD, byval as LPCWSTR, byval as integer, byval as LPWORD) as BOOL
+#endif
+
+#ifndef GetStringTypeA
+'' If we don't have this in win*.bi
 declare function GetStringTypeA alias "GetStringTypeA" ( byval locale as LCID, byval as DWORD, byval as LPCSTR, byval as integer, byval as LPWORD) as BOOL
+#endif
 
 private function UtilGetStringType _
 	( _

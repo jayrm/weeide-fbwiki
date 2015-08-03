@@ -1,6 +1,8 @@
 #ifndef __WEENYIDE_INCLUDE__
 #define __WEENYIDE_INCLUDE__
 
+#define SPELL_CHECK_ENABLE
+
 #include once "CApplication.bi"
 #include once "CDocuments.bi"
 

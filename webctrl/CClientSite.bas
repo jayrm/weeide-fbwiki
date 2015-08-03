@@ -121,7 +121,7 @@ private function CClientSite_ShowObject _
 									  cast( RECTL ptr, @rect ), _
 									  cast( RECTL ptr, @rect ), _
 									  NULL, _
-									  NULL )
+									  0 )
 	end if
 	
 	function = NOERROR

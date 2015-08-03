@@ -12,7 +12,7 @@ FBC := fbc
 FBCFLAGS :=
 
 ifdef DEBUG
-FBCFLAGS += -g
+FBCFLAGS += -g -d SPELL_CHECK_ENABLE
 endif
 
 LIBRARY := $(LIBDEST)lib$(LIBNAME).a
@@ -31,7 +31,7 @@ all: $(LIBRARY)
 
 
 $(LIBRARY): $(OBJS)
-	$(FBC) $(FBCFLAGS) -lib -x $(LIBDEST)$(LIBNAME) $(OBJS)
+	$(FBC) $(FBCFLAGS) -lib -x $(LIBRARY) $(OBJS)
 	
 	
 .PHONY : clean

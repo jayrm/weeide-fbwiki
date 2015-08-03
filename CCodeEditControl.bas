@@ -545,7 +545,7 @@ function CCodeEditControl.SelfRegister() as BOOL
 		'' superclass the richedit control
 		if( GetClassInfo( _hInstance, RICHEDIT_CLASS, @wcls ) = FALSE ) then
 			Application.ErrorMessage( GetLastError(), TEXT( "Unable to superclass Richedit control" ))
-			return NULL
+			return FALSE
 		end if
 
 		'' save this, we'll need it later.
@@ -560,7 +560,7 @@ function CCodeEditControl.SelfRegister() as BOOL
 		'' Register the superclassed richedit class     
 		if( RegisterClass( @wcls ) = FALSE ) then
 			Application.ErrorMessage( GetLastError(), TEXT( "Could not register the CodeEdit class" ))
-			return NULL
+			return FALSE
 		end if
 
 		bClassRegistered = TRUE
