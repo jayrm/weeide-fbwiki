@@ -18,6 +18,7 @@ SRCS += weeide_edit.bas
 SRCS += weeide_code.bas
 SRCS += weeide_wiki.bas
 SRCS += weeide_html.bas
+SRCS += weeide_ini.bas
 SRCS += weeide_find.bas
 SRCS += weeide_spell.bas
 SRCS += weeide_main.bas

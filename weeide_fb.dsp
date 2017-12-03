@@ -249,6 +249,14 @@ SOURCE=.\weeide_html.bi
 # End Source File
 # Begin Source File
 
+SOURCE=.\weeide_ini.bas
+# End Source File
+# Begin Source File
+
+SOURCE=.\weeide_ini.bi
+# End Source File
+# Begin Source File
+
 SOURCE=.\weeide_main.bas
 # End Source File
 # Begin Source File
@@ -427,6 +435,10 @@ SOURCE=.\list.txt
 # Begin Source File
 
 SOURCE=.\notes.txt
+# End Source File
+# Begin Source File
+
+SOURCE=.\weeide.ini
 # End Source File
 # End Target
 # End Project
