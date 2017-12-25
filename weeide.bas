@@ -12,6 +12,7 @@
 #include once "weeide.bi"
 #include once "weeide_menu.bi"
 #include once "weeide_main.bi"
+#include once "weeide_ini.bi"
 
 #include once "mkwiki.bi"
 
@@ -38,6 +39,14 @@ function WinMain stdcall alias "WinMain" _
 
 	Application.Name = TEXT( "WEEIDE" )
 	Application.Title = TEXT( "Wee IDE" )
+
+	'' make sure we can read the ini file
+	weeide_ini_set_filename( "weeide.ini" )
+
+	if( weeide_ini_loadfile() = false ) then
+		Application.ErrorMessage( 0, TEXT( "Unable to read 'weeide.ini'" ))
+		return -1
+	end if
 
 	if( OleInitialize( NULL ) <> S_OK ) then
 		return -1
@@ -85,12 +94,16 @@ function WinMain stdcall alias "WinMain" _
 
 	frmMain->CmdWikiPageList( FALSE )
 
-	HtmlPreview_Init( exepath() + "/" )
+	'' ///
+	'' !!! TODO: check html path
+	HtmlPreview_Init( weeide_ini_getopt( "manual_dir", exepath() & "/" ) )
 
 	'' frmMain->CmdNew();
 	dim as TString f 
-	f = TEXT( "JeffMarshall" )
-	frmMain->CmdWikiOpen( f )
+	f = weeide_ini_getopt( "web_username", "" )
+	if( f.GetLength() > 0 ) then
+		frmMain->CmdWikiOpen( f )
+	end if
 
 	while( TRUE )
 		ret = GetMessage( @wMsg, NULL, 0, 0 )

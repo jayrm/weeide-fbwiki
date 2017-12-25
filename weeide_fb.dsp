@@ -430,10 +430,6 @@ SOURCE=.\webctrl\webctrl.bi
 # End Group
 # Begin Source File
 
-SOURCE=.\list.txt
-# End Source File
-# Begin Source File
-
 SOURCE=.\notes.txt
 # End Source File
 # Begin Source File

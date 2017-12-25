@@ -13,6 +13,7 @@
 #include once "weeide_wiki.bi"
 #include once "weeide_html.bi"
 #include once "weeide_main.bi"
+#include once "weeide_ini.bi"
 #include once "utils.bi"
 #include once "spellcheck.bi"
 
@@ -760,16 +761,19 @@ function MainWindow.CmdWikiPreview() as BOOL
 				dim as CDocumentItem ptr doc = Docs.FindByName( title )
 				dim as HtmlWindow ptr frmHtml
 
+				'' ///
+				dim html_dir as string = weeide_ini_getopt( "html_dir", exepath() + "/html/" )
+
 				if( doc ) then
 					frmHtml = GetHtmlWindowPtr( doc->GetHwnd() )
 					if( frmHtml ) then
-						frmHtml->Navigate( "file://" + exepath() + "/html/" + sPage + ".html" )
+						frmHtml->Navigate( "file://" + html_dir + sPage + ".html" )
 						SetFocus( frmHtml->GetHwnd() )
 					end if
 				else
 					frmHtml = HtmlWindow.InitInstance( WID_HTMLWINDOW, _hwndMDI, title )
 					if( frmHtml ) then
-						frmHtml->Navigate( "file://" + exepath() + "/html/" + sPage + ".html" )
+						frmHtml->Navigate( "file://" + html_dir + sPage + ".html" )
 					end if
 				end if
 			end if

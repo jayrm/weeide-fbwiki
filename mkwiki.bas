@@ -24,6 +24,7 @@ declare function RefreshPageIndex ( byval bForceDownload as integer ) as integer
 #include once "CApplication.bi"
 #include once "weeide.bi"
 #include once "weeide_main.bi"
+#include once "weeide_ini.bi"
 
 using fb
 using fbdoc
@@ -40,6 +41,7 @@ dim shared as MainWindow ptr frmMain = NULL
 dim shared as integer islogged = FALSE
 dim shared as string sUsername
 dim shared as string sPassword
+dim shared as string ca_file
 
 private function mkwiki_PrintLogger( byval s as zstring ptr, byval bNoCR as integer = FALSE ) as integer
 	if( frmMain ) then
@@ -65,15 +67,31 @@ end function
 
 function mkwiki_Create() as integer
 
-	'' $$$ TODO: should not be hard code
-	wiki_url = "http://myweb/fbwiki/wikka.php"
+	'' ///
+	const dev as boolean = true
 
-	'' wiki_url = "http://www.freebasic.net/wiki/wikka.php"
+	if( dev ) then
+		'' ///
+		wiki_url = weeide_ini_getopt( "dev_wiki_url", "https://myweb/fbwikka.git/wikka.php" )
+		ca_file = weeide_ini_getopt( "dev_certificate" )
+		'' sCacheDir = weeide_ini_getopt( "dev_cache_dir", exepath() + "/cache/" )
 
-	sCacheDir = exepath() + "/cache/"
+	else
+		'' ///
+		wiki_url = weeide_ini_getopt( "web_wiki_url", "https://www.freebasic.net/wiki/wikka.php" )
+		ca_file = weeide_ini_getopt( "web_certificate" )
+		'' sCacheDir = weeide_ini_getopt( "web_cache_dir", exepath() + "/cache/" )
+
+	end if
+
+	sCacheDir = weeide_ini_getopt( "cache_dir", exepath() + "/cache/" )
+
+	'' be sure to initialize connection object
+	'' - libcurl's lazy initialization is not thread safe
+	CWikiCon.GlobalInit()
 
 	'' Initialize the connection (logon will happen on first post)
-	wikicon = new fb.fbdoc.CWikiCon( wiki_url )
+	wikicon = new fb.fbdoc.CWikiCon( wiki_url, ca_file )
 	if wikicon = NULL then
 		dim as TString msg
 		msg = "Unable to create connection to " 
@@ -151,6 +169,7 @@ function mkwiki_LoadPageIndexToList( byval ctl as HWND ) as integer
 
 		dim h as integer
 		h = FreeFile
+		'' ///
 		if( open( exepath + "/PageIndex.txt" for input access read as #h ) = 0 ) then
 			while eof(h) = 0
 				line input #h, x

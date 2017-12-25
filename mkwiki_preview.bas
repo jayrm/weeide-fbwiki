@@ -31,6 +31,7 @@ function HtmlPreview_Init _
 	dim sLangFile as string
 
 	'' Load language options
+	'' ///
 	sLangFile = sPrefixDir + "templates/default/lang/en/common.ini"
 	if( Lang.LoadOptions( sLangFile ) = FALSE ) then
 		printlog "Unable to load language file '" + sLangFile + "'"
@@ -42,6 +43,7 @@ function HtmlPreview_Init _
 
 	dim sTemplateDir as string
 
+	'' ///
 	sTemplateDir = sPrefixDir + "templates/default/code/"
 
 	Templates.Clear()
@@ -52,6 +54,7 @@ function HtmlPreview_Init _
 	Templates.LoadFile( "htm_toc", sTemplateDir + "htm_toc.tpl.html" )
 	Templates.LoadFile( "chm_doctoc", sTemplateDir + "chm_doctoc.tpl.html" )
 
+	'' ///
 	sOutputDir = sPrefixDir & "html/"
 
 	function = TRUE

@@ -4,7 +4,6 @@
 type OPT_T
 	sKey as string
 	sValue as string
-	sDefault as string
 end type
 
 dim shared m_max_opts as integer = 1
@@ -15,7 +14,7 @@ redim shared m_opts(1 to m_max_opts) as OPT_T
 dim shared m_filename as string
 dim shared m_fhandle as integer = 0
 dim shared m_fileopened as boolean = false
-dim shared m_overwrite as boolean = false
+dim shared m_create as boolean = false
 
 ''
 sub weeide_ini_clearopts( )
@@ -41,12 +40,11 @@ function weeide_ini_findopt( byref optname as const string ) as integer
 end function
 
 ''
-function weeide_ini_addopt _
+function weeide_ini_setopt _
 	( _
 		byref optname as const string, _
 		byref optvalue as const string = "", _
-		byref optdefault as const string = "", _
-		byval overwrite as boolean = false _
+		byval create as const boolean = true _
 	) as boolean
 
 	function = false
@@ -58,12 +56,9 @@ function weeide_ini_addopt _
 	dim index as integer = weeide_ini_findopt( optname )
 
 	if( index > 0 ) then
-		if( overwrite ) then
-			m_opts( index ).sValue = optvalue
-		end if
-		m_opts( index ).sDefault = optdefault	
+		m_opts( index ).sValue = optvalue
 
-	else
+	elseif( create = true ) then
 		if( m_num_opts = m_max_opts ) then
 			m_max_opts *= 2
 			redim preserve m_opts( 1 to m_max_opts ) as OPT_T
@@ -73,7 +68,6 @@ function weeide_ini_addopt _
 		with m_opts( m_num_opts )
 			.sKey = optname
 			.sValue = optvalue
-			.sDefault = optdefault
 		end with
 
 	end if
@@ -83,7 +77,7 @@ function weeide_ini_addopt _
 end function
 
 ''
-function weeide_ini_getopt( byref optname as const string ) as string
+function weeide_ini_getopt( byref optname as const string, byref optdefault as const string = "" ) as string
 
 	function = ""
 
@@ -91,19 +85,8 @@ function weeide_ini_getopt( byref optname as const string ) as string
 
 	if( index > 0 ) then
 		function = m_opts( index ).sValue
-	end if
-
-end function
-
-''
-function weeide_ini_setopt( byref optname as const string, byref optvalue as const string ) as boolean
-	
-	function = false
-
-	dim index as integer = weeide_ini_findopt( optname )
-
-	if( index > 0 ) then
-		m_opts( index ).sValue = optvalue
+	else
+		function = optdefault
 	end if
 
 end function
@@ -122,7 +105,7 @@ end function
 ''
 function weeide_ini_set_filename( byref filename as const string ) as boolean
 
-	m_filename = m_filename
+	m_filename = filename
 
 	function = true
 
@@ -138,7 +121,7 @@ function weeide_ini_openfile( byref filename as const string = "" ) as boolean
 	dim f as string = filename
 
 	if( f = "" ) then
-		f = m_filename
+		f = weeide_ini_get_filename()
 	end if
 
 	if( open( f for input access read as #h ) = 0 ) then
@@ -182,8 +165,8 @@ function weeide_ini_readfile( ) as boolean
 		if( i > 0 ) then
 			dim sKey as string = trim( left( x, i-1 ) )
 			dim sValue as string = fb.fbdoc.StripQuotes( ltrim( mid( x, i + 1 ) ) )
-			
-			weeide_ini_addopt( sKey, sValue, , m_overwrite )
+
+			weeide_ini_setopt( sKey, sValue, m_create )
 
 		end if
 
@@ -208,25 +191,27 @@ function weeide_ini_closefile( ) as boolean
 end function
 
 ''
-function weeide_ini_loadfile( byref filename as const string = "", byval overwrite as boolean = false ) as boolean
-
-	dim f as string = filename
+function weeide_ini_loadfile( byref filename as const string = "", byval create as boolean = true ) as boolean
 
 	function = false
 
+	dim f as string = filename
+
 	if( f = "" ) then
-		f = m_filename
+		f = weeide_ini_get_filename()
 	end if
 
 	if( f = "" ) then
 		exit function
 	end if
 
-	if( weeide_ini_openfile( filename ) = false ) then
+	weeide_ini_set_filename( f )
+
+	if( weeide_ini_openfile() = false ) then
 		exit function
 	end if
 
-	m_overwrite = overwrite
+	m_create = create
 
 	weeide_ini_readfile( )
 

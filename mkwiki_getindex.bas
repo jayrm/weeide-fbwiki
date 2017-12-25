@@ -191,6 +191,7 @@ public sub RefreshPageIndex ( byval bForceDownload as integer )
 	dim bDownload as integer = FALSE
 
 	if( bForceDownload = FALSE ) then
+		'' ///
 		if( fileexists( exepath + "/PageIndex.txt" ) = FALSE ) then
 			bDownload = TRUE
 		end if
@@ -199,6 +200,7 @@ public sub RefreshPageIndex ( byval bForceDownload as integer )
 	end if
 
 	if( bDownload ) then
+		'' ///
 		GetPageIndex( exepath + "/PageIndex.txt" )
 	end if
 
