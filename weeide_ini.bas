@@ -164,7 +164,7 @@ function weeide_ini_readfile( ) as boolean
 		dim i as integer = instr( x, "=" )
 		if( i > 0 ) then
 			dim sKey as string = trim( left( x, i-1 ) )
-			dim sValue as string = fb.fbdoc.StripQuotes( ltrim( mid( x, i + 1 ) ) )
+			dim sValue as string = fb.fbdoc.StripQuotes( ltrim( trim( mid( x, i + 1 ) ) ) )
 
 			weeide_ini_setopt( sKey, sValue, m_create )
 
