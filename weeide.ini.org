@@ -1,0 +1,24 @@
+[weeide]
+dev_mode       = 0
+
+[dirs]
+manual_dir     = d:/fb/doc/manual/
+cache_dir      = d:/fb/doc/manual/cache/
+web_cache_dir  = d:/fb/doc/manual/cache.web/
+dev_cache_dir  = d:/fb/doc/manual/cache.dev/
+html_dir       = d:/fb/doc/manual/html/
+image_dir      = d:/fb/doc/manual/html/images/
+templates_dir  = d:/fb/doc/manual/templates/
+fb_dir         = d:/fb/
+
+[web]
+web_wiki_url = https://www.freebasic.net/wiki/wikka.php
+web_certificate = d:/fb/doc/certificate/fbnetchain.pem
+web_username =  
+web_password = 
+
+[dev]
+dev_wiki_url = https://myweb/fbwikka.git/wikka.php
+dev_certificate = d:/fb/doc/certificate/myweb.pem
+dev_username =  
+dev_password =  

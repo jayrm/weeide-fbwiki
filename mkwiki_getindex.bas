@@ -8,6 +8,7 @@ using fb
 using fbdoc
 
 extern mkwikicon_index as CWikiCon ptr
+extern wiki_url as string
 
 dim shared mkwikicon_index as fb.fbdoc.CWikiCon ptr = NULL
 
@@ -157,7 +158,7 @@ private function GetPageIndex _
 
 	sPage = "PageIndex"
 
-	printlog "Getting PageIndex: ", TRUE
+	printlog "Getting PageIndex (from " & wiki_url & "): ", TRUE
 
 	if( mkwikicon_index->LoadPage( sPage, FALSE, FALSE, sBody ) = FALSE ) then
 		printlog "Error"

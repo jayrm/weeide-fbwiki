@@ -1,3 +1,4 @@
+weeide.fb/readme.txt
 weeide.fb/CApplication.bas
 weeide.fb/CApplication.bi
 weeide.fb/CCodeEditControl.bas
@@ -23,8 +24,9 @@ weeide.fb/mkwiki_login.bas
 weeide.fb/mkwiki_login.bi
 weeide.fb/mkwiki_preview.bas
 weeide.fb/resource.bi
-weeide.fb/resource.obj
 weeide.fb/resource.rc
+weeide.fb/spellcheck.bas
+weeide.fb/spellcheck.bi
 weeide.fb/TString.bas
 weeide.fb/TString.bi
 weeide.fb/utils.bas
@@ -42,11 +44,15 @@ weeide.fb/weeide_find.bas
 weeide.fb/weeide_find.bi
 weeide.fb/weeide_html.bas
 weeide.fb/weeide_html.bi
+weeide.fb/weeide_ini.bas
+weeide.fb/weeide_ini.bi
 weeide.fb/weeide_main.bas
 weeide.fb/weeide_main.bi
 weeide.fb/weeide_menu.bas
 weeide.fb/weeide_menu.bi
 weeide.fb/weeide_resource.bi
+weeide.fb/weeide_spell.bas
+weeide.fb/weeide_spell.bi
 weeide.fb/weeide_wiki.bas
 weeide.fb/weeide_wiki.bi
 weeide.fb/obj/deleteme.txt
@@ -57,7 +63,6 @@ weeide.fb/res/weeide.exe.manifest
 weeide.fb/res/weeide.ico
 weeide.fb/res/weeide_large.ico
 weeide.fb/res/weeide_small.ico
-weeide.fb/libwebctrl.a
 weeide.fb/webctrl/CBrowser.bas
 weeide.fb/webctrl/CBrowser.bi
 weeide.fb/webctrl/CClientSite.bas

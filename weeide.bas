@@ -98,12 +98,19 @@ function WinMain stdcall alias "WinMain" _
 	'' !!! TODO: check html path
 	HtmlPreview_Init( weeide_ini_getopt( "manual_dir", exepath() & "/" ) )
 
-	'' frmMain->CmdNew();
+	/'
+	'' create a new window 
+	frmMain->CmdNew();
+	'/
+
+	/'
+	'' load the user name's wiki page
 	dim as TString f 
 	f = weeide_ini_getopt( "web_username", "" )
 	if( f.GetLength() > 0 ) then
 		frmMain->CmdWikiOpen( f )
 	end if
+	'/
 
 	while( TRUE )
 		ret = GetMessage( @wMsg, NULL, 0, 0 )

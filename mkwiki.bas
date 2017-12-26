@@ -33,6 +33,9 @@ extern mkwikicon_main as CWikiCon ptr
 extern mkwikicon_index as CWikiCon ptr
 
 dim shared mkwikicon_main as CWikiCon ptr = NULL
+
+extern wiki_url as string
+
 dim shared as string wiki_url
 dim shared as string sCacheDir
 dim shared as any ptr PageIndexMutex
@@ -69,9 +72,9 @@ end function
 function mkwiki_Create() as integer
 
 	'' ///
-	const dev as boolean = true
+	dim dev_mode as boolean = cbool( weeide_ini_getopt( "dev_mode", "0" ) )
 
-	if( dev ) then
+	if( dev_mode ) then
 		'' ///
 		wiki_url = weeide_ini_getopt( "dev_wiki_url", "https://myweb/fbwikka.git/wikka.php" )
 		ca_file = weeide_ini_getopt( "dev_certificate" )

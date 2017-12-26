@@ -163,6 +163,22 @@ SOURCE=.\mk.bat
 
 SOURCE=.\mkdist.bat
 # End Source File
+# Begin Source File
+
+SOURCE=.\notes.txt
+# End Source File
+# Begin Source File
+
+SOURCE=.\readme.txt
+# End Source File
+# Begin Source File
+
+SOURCE=.\weeide.ini
+# End Source File
+# Begin Source File
+
+SOURCE=.\weeide.ini.org
+# End Source File
 # End Group
 # Begin Group "src"
 
@@ -428,13 +444,5 @@ SOURCE=.\webctrl\webctrl.bas
 SOURCE=.\webctrl\webctrl.bi
 # End Source File
 # End Group
-# Begin Source File
-
-SOURCE=.\notes.txt
-# End Source File
-# Begin Source File
-
-SOURCE=.\weeide.ini
-# End Source File
 # End Target
 # End Project
