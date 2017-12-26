@@ -7,7 +7,9 @@
 using fb
 using fbdoc
 
-extern wikicon as CWikiCon ptr
+extern mkwikicon_index as CWikiCon ptr
+
+dim shared mkwikicon_index as fb.fbdoc.CWikiCon ptr = NULL
 
 private function RemoveHtmlTags( byref sBody as string ) as string
 
@@ -157,7 +159,7 @@ private function GetPageIndex _
 
 	printlog "Getting PageIndex: ", TRUE
 
-	if( wikicon->LoadPage( sPage, FALSE, FALSE, sBody ) = FALSE ) then
+	if( mkwikicon_index->LoadPage( sPage, FALSE, FALSE, sBody ) = FALSE ) then
 		printlog "Error"
 	else
 

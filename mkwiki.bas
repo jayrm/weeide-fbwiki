@@ -29,9 +29,10 @@ declare function RefreshPageIndex ( byval bForceDownload as integer ) as integer
 using fb
 using fbdoc
 
-extern wikicon as CWikiCon ptr
+extern mkwikicon_main as CWikiCon ptr
+extern mkwikicon_index as CWikiCon ptr
 
-dim shared wikicon as CWikiCon ptr = NULL
+dim shared mkwikicon_main as CWikiCon ptr = NULL
 dim shared as string wiki_url
 dim shared as string sCacheDir
 dim shared as any ptr PageIndexMutex
@@ -90,11 +91,22 @@ function mkwiki_Create() as integer
 	'' - libcurl's lazy initialization is not thread safe
 	CWikiCon.GlobalInit()
 
-	'' Initialize the connection (logon will happen on first post)
-	wikicon = new fb.fbdoc.CWikiCon( wiki_url, ca_file )
-	if wikicon = NULL then
+	'' Initialize the main connection (logon will happen on first post)
+	mkwikicon_main = new fb.fbdoc.CWikiCon( wiki_url, ca_file )
+	if mkwikicon_main = NULL then
 		dim as TString msg
-		msg = "Unable to create connection to " 
+		msg = "Unable to create main connection to " 
+		msg += wiki_url
+		Application.ErrorMessage( 0, msg )
+		return FALSE
+	end if
+
+	'' Initialize the index connection
+	mkwikicon_index = new fb.fbdoc.CWikiCon( wiki_url, ca_file )
+	if mkwikicon_index = NULL then
+		delete mkwikicon_main
+		dim as TString msg
+		msg = "Unable to create index connection to " 
 		msg += wiki_url
 		Application.ErrorMessage( 0, msg )
 		return FALSE
@@ -102,7 +114,8 @@ function mkwiki_Create() as integer
 
 	'' Initialize the cache used by the doc converter / preview handler
 	if LocalCache_Create( sCacheDir, fb.fbdoc.CWikiCache.CACHE_REFRESH_NONE ) = FALSE then
-		delete wikicon
+		delete mkwikicon_main
+		delete mkwikicon_index
 		dim as TString msg
 		msg = "Unable to use local cache dir " 
 		msg += sCacheDir
@@ -120,9 +133,14 @@ function mkwiki_Destroy() as integer
 
 	mkwiki_UnhookPrintLogger()
 
-	if( wikicon ) then
-		delete wikicon
-		wikicon = NULL
+	if( mkwikicon_main ) then
+		delete mkwikicon_main
+		mkwikicon_main = NULL
+	end if
+
+	if( mkwikicon_index ) then
+		delete mkwikicon_index
+		mkwikicon_index = NULL
 	end if
 
 	LocalCache_Destroy()
@@ -195,12 +213,12 @@ function mkwiki_LoadPageIndexToList( byval ctl as HWND ) as integer
 end function
 
 function mkwiki_LoadPage( byref sPage as string, byref sBody as string ) as integer
-	return wikicon->LoadPage( sPage, TRUE, TRUE, sBody )
+	return mkwikicon_main->LoadPage( sPage, TRUE, TRUE, sBody )
 end function
 
 function mkwiki_Login( byval bForce as integer ) as integer
 	
-	if( wikicon = NULL ) then
+	if( mkwikicon_main = NULL ) then
 		return FALSE
 	end if
 
@@ -221,7 +239,7 @@ function mkwiki_Login( byval bForce as integer ) as integer
 		u = *frm.Username.GetPtr()
 		p = *frm.Password.GetPtr()
 
-		if( wikicon->login( u, p ) ) then
+		if( mkwikicon_main->login( u, p ) ) then
 			sUsername = u
 			sPassword = p
 
@@ -252,14 +270,14 @@ function mkwiki_SavePage _
 		exit function
 	end if
 
-	if( wikicon->LoadPage( sPage, TRUE, TRUE, sBodyOld ) <> FALSE ) then
-		if( wikicon->GetPageID() > 0 ) then
-			' %%% if( wikicon->Login( sUserName, sPassword ) ) = FALSE then
+	if( mkwikicon_main->LoadPage( sPage, TRUE, TRUE, sBodyOld ) <> FALSE ) then
+		if( mkwikicon_main->GetPageID() > 0 ) then
+			' %%% if( mkwikicon_main->Login( sUserName, sPassword ) ) = FALSE then
 			' %%%	print "Unable to login"
 			' %%% else
 				PrintLog "Storing '" + sPage + "' [" + sNote + "] : ", TRUE
 
-				if( wikicon->StorePage( sBody, sNote ) = FALSE ) then
+				if( mkwikicon_main->StorePage( sBody, sNote ) = FALSE ) then
 					PrintLog "FAILED"
 				else
 					PrintLog "OK"
@@ -268,11 +286,11 @@ function mkwiki_SavePage _
 			' %%% end if
 		else
 			print "Unable to get existing page ID - will try to store as a new page .."
-			' %%% if( wikicon->Login( sUserName, sPassword ) ) = FALSE then
+			' %%% if( mkwikicon_main->Login( sUserName, sPassword ) ) = FALSE then
 			' %%% 	print "Unable to login"
 			' %%% else
 				PrintLog "Storing '" + sPage + "': ", TRUE
-				if( wikicon->StoreNewPage( sBody, sPage ) = FALSE ) then
+				if( mkwikicon_main->StoreNewPage( sBody, sPage ) = FALSE ) then
 					PrintLog "FAILED"
 				else
 					PrintLog "OK"
