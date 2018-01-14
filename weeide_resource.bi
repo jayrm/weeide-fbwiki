@@ -64,8 +64,9 @@
 #define IDI_DOCUMENT_SMALL              1011
 #define IDI_DOCUMENT_LARGE              1012
 
-#define IDC_MAIN_LIST                   2001
-#define IDC_MAIN_OUTPUT                 2002
+#define IDC_MAIN_FILTER                 2001
+#define IDC_MAIN_LIST                   2002
+#define IDC_MAIN_OUTPUT                 2003
 
 #define IDD_ABOUT                       3000
 #define IDC_ABOUT_ICON                  3001

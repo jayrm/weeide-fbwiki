@@ -6,7 +6,7 @@ declare function mkwiki_Create() as integer
 declare function mkwiki_Destroy() as integer
 declare function mkwiki_HookPrintLogger( byval frm as MainWindow ptr ) as integer
 declare function mkwiki_UnhookPrintLogger() as integer
-declare function mkwiki_LoadPageIndexToList( byval ctl as HWND ) as integer
+declare function mkwiki_LoadPageIndexToList( byval ctl as HWND, byval filter_ctl as HWND ) as integer
 declare function mkwiki_Login( byval bForce as integer ) as integer
 
 declare function mkwiki_LoadPage( byref sPage as string, byref sBody as string ) as integer

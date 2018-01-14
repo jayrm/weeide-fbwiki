@@ -75,8 +75,9 @@
 // MAIN
 // --------------------------------------------------------
 
-#define IDC_MAIN_LIST                   2001
-#define IDC_MAIN_OUTPUT                 2002
+#define IDC_MAIN_FILTER                 2001
+#define IDC_MAIN_LIST                   2002
+#define IDC_MAIN_OUTPUT                 2003
 
 
 // --------------------------------------------------------

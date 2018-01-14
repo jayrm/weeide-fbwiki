@@ -174,13 +174,23 @@ function mkwiki_RefreshPageIndex ( byval bForceDownload as integer ) as integer
 	return FALSE
 end function
 
-function mkwiki_LoadPageIndexToList( byval ctl as HWND ) as integer
+function mkwiki_LoadPageIndexToList( byval ctl as HWND, byval filter_ctl as HWND ) as integer
 	
 	dim as string x
+	dim as TString sfilter
+	dim as string filter
 
 	MutexLock PageIndexMutex
 
 	function = FALSE
+
+	if( filter_ctl ) then
+		dim as CWindow FilterBox = filter_ctl
+		sfilter = FilterBox.GetText()
+		if( sfilter.GetLength() > 0 ) then
+			filter = *sfilter.GetPtr()
+		end if
+	end if
 
 	if ( ctl ) then
 
@@ -194,8 +204,22 @@ function mkwiki_LoadPageIndexToList( byval ctl as HWND ) as integer
 		if( open( exepath + "/PageIndex.txt" for input access read as #h ) = 0 ) then
 			while eof(h) = 0
 				line input #h, x
+
 				if x > "" then
-					SendMessage(ctl, LB_ADDSTRING, 0, cast(LPARAM,strptr(x)))
+
+					dim doadd as boolean = false
+
+					if( filter > "" ) then
+						if( instr( lcase(x), lcase(filter) ) > 0 ) then
+						''if( lcase(filter) = lcase(left(x,len(filter)))) then
+							doadd = true
+						end if
+					else
+						doadd = true
+					end if
+					if( doadd ) then
+						SendMessage(ctl, LB_ADDSTRING, 0, cast(LPARAM,strptr(x)))
+					end if
 				end if
 			wend
 			close #h

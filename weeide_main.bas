@@ -256,6 +256,7 @@ constructor MainWindow()
 	_hmenuMDI = NULL
 	_haccelTable = NULL
 	frmFind = NULL
+	_hwndFilter = NULL
 	_hwndList = NULL
 	_fixedfnt = NULL
 	_swissfnt = NULL
@@ -399,6 +400,12 @@ function MainWindow.InitInstance( byval hInstance as HINSTANCE ) as MainWindow p
 
 	_this->_fixedfnt = CreateFixedFont( -11 )
 	_this->_swissfnt = CreateSwissFont( -11 )
+	
+	'' Editbox for filtering wiki pages
+	_this->_hwndFilter = CreateWindowEx( WS_EX_CLIENTEDGE, TEXT( "EDIT" ), cast(LPCTSTR, NULL), _
+		WS_VISIBLE or WS_CHILD, _
+		0, 0, 0, 0, _this->_hwnd, cast(HMENU, IDC_MAIN_FILTER), _this->_hInstance, NULL )
+	SendMessage( _this->_hwndFilter, WM_SETFONT, cast( WPARAM, _this->_swissfnt), TRUE )
 
 	'' Listbox for showing wiki pages
 	_this->_hwndList = CreateWindowEx( WS_EX_CLIENTEDGE, "LISTBOX", cast(LPCTSTR, NULL), _
@@ -709,6 +716,11 @@ function MainWindow.CmdWikiOpen( byref pagename as TString ) as BOOL
 
 end function
 
+function MainWindow.OnFilterChange() as BOOL
+	mkwiki_LoadPageIndexToList( GetDlgItem( _hwnd, IDC_MAIN_LIST ), GetDlgItem( _hwnd, IDC_MAIN_FILTER ) )
+	return FALSE
+end function
+
 function MainWindow.OnListDblClick() as BOOL
 
 	dim as TString pagename
@@ -931,7 +943,7 @@ end function
 '' --------------------------------------------------------
 function MainWindow.OnPageIndexCompleted( byval wParam as WPARAM, byval lParam as LPARAM ) as BOOL
 	'' mkwiki.bas ensures that this event is not re-entrant
-	mkwiki_LoadPageIndexToList( GetDlgItem( _hwnd, IDC_MAIN_LIST ))
+	mkwiki_LoadPageIndexToList( GetDlgItem( _hwnd, IDC_MAIN_LIST ), GetDlgItem( _hwnd, IDC_MAIN_FILTER ) )
 	return FALSE
 end function
 
@@ -1171,6 +1183,11 @@ function MainWindow.OnCommand(  byval wParam as WPARAM, byval lParam as LPARAM  
 	case IDM_WIKI_SPELLCHECK:
 		return CmdWikiSpellCheck( TRUE )
 
+	case IDC_MAIN_FILTER:
+		if( HIWORD( wParam ) = EN_CHANGE ) then
+			OnFilterChange()
+		end if
+
 	case IDC_MAIN_LIST:
 		if( HIWORD( wParam ) = LBN_DBLCLK ) then
 			OnListDblClick()
@@ -1198,27 +1215,30 @@ function MainWindow.OnSize( byval nWidth as integer, byval nHeight as integer ) 
 
 	/'
 		+--------+----------------+
-		| w1xh1  | w2xh3          |
+		| w1xh0  | w2xh3          |
 		| (1)    | _hwndMDI       |
-		|        |                |
-		|        |                |
-		|        |                |
+		+--------+                |
+		| w1xh1  |                |
+		| (2)    |                |
 		|        +----------------+
 		|        | w2xh4          |
 		|        | _hwndOutput    |
 		+--------+----------------+
-		(1) = IDC_MAIN_LIST
+		(1) = IDC_MAIN_FILTER
+		(2) = IDC_MAIN_LIST
 	'/
 
 	dim as integer w1 = 160
 	dim as integer w2 = nWidth - w1
 
-	dim as integer h1 = nHeight
+	dim as integer h0 = 20
+	dim as integer h1 = nHeight - h0
 
 	dim as integer h4 = 80
 	dim as integer h3 = nHeight - h4
 
-	MoveWindow( _hwndList    ,  0,  0, w1, h1, TRUE )
+	MoveWindow( _hwndFilter  ,  0,  0, w1, h0, TRUE )
+	MoveWindow( _hwndList    ,  0, h0, w1, h1, TRUE )
 	MoveWindow( _hwndMDI     , w1,  0, w2, h3, TRUE )
 	MoveWindow( _hwndOutput  , w1, h3, w2, h4, TRUE )
 

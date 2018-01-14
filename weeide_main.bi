@@ -16,6 +16,7 @@ type MainWindow
 		as HMENU _hmenuMDI
 		as HACCEL _haccelTable
 		as CFindDialog ptr frmFind
+		as CWindow _hwndFilter
 		as CWindow _hwndList
 		as COutputControl _hwndOutput
 		as HFONT _fixedfnt
@@ -78,9 +79,12 @@ type MainWindow
 		declare function CmdWikiPreview() as BOOL
 		declare function CmdWikiSpellCheck( byval bNext as BOOL ) as BOOL
 		
+		'' FILTER
+		declare function OnFilterChange() as BOOL
+
 		'' LIST
 		declare function OnListDblClick() as BOOL
-
+		
 		'' MISC
 		declare function LogClear() as BOOL
 		declare function LogPrint( byval text as LPCTSTR ) as BOOL
