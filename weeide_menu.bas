@@ -9,7 +9,7 @@
 ''     all MDI children will use this also
 '' --------------------------------------------------------
 
-#define NUM_APP_SHORTCUTS 9
+#define NUM_APP_SHORTCUTS 10
 
 static shared as ACCEL app_shortcuts(0 to NUM_APP_SHORTCUTS - 1) = _
 { _
@@ -20,7 +20,8 @@ static shared as ACCEL app_shortcuts(0 to NUM_APP_SHORTCUTS - 1) = _
 	( FCONTROL or FVIRTKEY, asc("F")  , IDM_EDIT_FIND ), _
 	( FCONTROL or FVIRTKEY, asc("R")  , IDM_EDIT_REPLACE ), _
 	( FCONTROL or FVIRTKEY, asc("V")  , IDM_EDIT_PASTE ), _
-	( FVIRTKEY            , VK_F5     , IDM_WIKI_PREVIEW ), _
+	( FVIRTKEY            , VK_F5     , IDM_WIKI_PREVIEW_HTML ), _
+	( FVIRTKEY            , VK_F6     , IDM_WIKI_PREVIEW_TXT ), _
 	( FVIRTKEY            , VK_F7     , IDM_WIKI_SPELLCHECK ) _
 }
 
@@ -152,7 +153,8 @@ function CreateAppWikiMenu() as HMENU
 
 	AMI_( IDM_WIKI_LOGIN      , TEXT( "&Login" ))
 	AMI_( IDM_WIKI_PAGELIST   , TEXT( "&Refresh Page List" ))
-	AMI_( IDM_WIKI_PREVIEW    , TEXT( "&Preview\tF5" ))
+	AMI_( IDM_WIKI_PREVIEW_HTML, TEXT( "&Preview HTML\tF5" ))
+	AMI_( IDM_WIKI_PREVIEW_TXT, TEXT( "Preview TXT\tF6" ))
 	AMI_( IDM_WIKI_SPELLCHECK , TEXT( "&Spell Check\tF7" ))
 
 	AMR_

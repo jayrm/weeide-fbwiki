@@ -88,7 +88,7 @@ end function
 '' Create a code window
 '' hwndParent is the MDI Client window
 '' --------------------------------------------------------
-function HtmlWindow.InitInstance( byval wid as DWORD, byval hwndParent as HWND , byref title as TString, byval bWordWrap as BOOL ) as HtmlWindow ptr
+function HtmlWindow.InitInstance( byval hwndParent as HWND , byref title as TString, byval bWordWrap as BOOL ) as HtmlWindow ptr
 
 	dim as HtmlWindow ptr _this
 	dim as RECT rc

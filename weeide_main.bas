@@ -745,7 +745,7 @@ function MainWindow.CmdWikiPageList( byval bForce as BOOL ) as BOOL
 	return TRUE
 end function
 
-function MainWindow.CmdWikiPreview() as BOOL
+function MainWindow.CmdWikiPreviewHtml() as BOOL
 
 	dim as HWND child = GetActiveChild()
 
@@ -767,7 +767,7 @@ function MainWindow.CmdWikiPreview() as BOOL
 				HtmlPreview_Generate( sPage )
 				
 				dim as TString title = pagename
-				title += " - preview"
+				title += " - HTML preview"
 
 				'' Already showing this page?
 				dim as CDocumentItem ptr doc = Docs.FindByName( title )
@@ -783,9 +783,64 @@ function MainWindow.CmdWikiPreview() as BOOL
 						SetFocus( frmHtml->GetHwnd() )
 					end if
 				else
-					frmHtml = HtmlWindow.InitInstance( WID_HTMLWINDOW, _hwndMDI, title )
+					frmHtml = HtmlWindow.InitInstance( _hwndMDI, title )
 					if( frmHtml ) then
 						frmHtml->Navigate( "file://" + html_dir + sPage + ".html" )
+					end if
+				end if
+			end if
+		end if
+	end if
+
+	return FALSE
+	
+end function
+
+function MainWindow.CmdWikiPreviewTxt() as BOOL
+
+	dim as HWND child = GetActiveChild()
+
+	if( CWindowInfo.GetWindowType( child ) = WID_WIKIWINDOW ) then
+		dim as WikiWindow ptr frm = GetWikiWindowPtr( child )
+		dim as TString pagename, bodytext
+
+		pagename = frm->GetFileName()
+		bodytext = frm->GetText()
+
+		if( pagename.GetLength() > 0 ) then
+			if( bodytext.GetLength() > 0 ) then
+				dim as string sPage, sBody
+				sPage = *pagename.GetPtr()
+				sBody = *bodytext.GetPtr()
+
+				mkwiki_SavePageToCache( sPage, sBody )
+
+				TxtPreview_Generate( sPage )
+				
+				dim as TString title = pagename
+				title += " - TXT preview"
+
+				'' Already showing this page?
+				dim as CDocumentItem ptr doc = Docs.FindByName( title )
+				dim as CodeWindow ptr frmTxt
+
+				'' ///
+				dim txt_dir as TString , txt_file as TString
+				txt_dir = weeide_ini_getopt( "txt_dir", exepath() + "/txt/" )
+				txt_file = txt_dir
+				txt_file += pagename
+				txt_file += ".txt"
+
+				if( doc ) then
+					frmTxt = GetCodeWindowPtr( doc->GetHwnd() )
+					if( frmTxt ) then
+						frmTxt->OpenFile( txt_file )
+						SetFocus( frmTxt->GetHwnd() )
+					end if
+				else
+					frmTxt = CodeWindow.InitInstance(  _hwndMDI, title )
+					if( frmTxt ) then
+						frmTxt->OpenFile( txt_file )
 					end if
 				end if
 			end if
@@ -1177,8 +1232,11 @@ function MainWindow.OnCommand(  byval wParam as WPARAM, byval lParam as LPARAM  
 	case IDM_WIKI_PAGELIST:
 		return CmdWikiPageList( TRUE )
 
-	case IDM_WIKI_PREVIEW:
-		return CmdWikiPreview()
+	case IDM_WIKI_PREVIEW_HTML:
+		return CmdWikiPreviewHtml()
+
+	case IDM_WIKI_PREVIEW_TXT:
+		return CmdWikiPreviewTxt()
 
 	case IDM_WIKI_SPELLCHECK:
 		return CmdWikiSpellCheck( TRUE )

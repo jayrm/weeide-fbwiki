@@ -14,12 +14,17 @@ declare function mkwiki_SavePage( byref sPage as string, byref sBody as string, 
 
 declare function mkwiki_SavePageToCache( byref sPage as string, byref sBody as string ) as integer
 
-declare function HtmlPreview_Init _
+declare function Preview_Init _
 	( _
 		byref sPrefixDir as string _
 	) as integer
 
 declare function HtmlPreview_Generate _
+	( _
+		byref sPage as string _
+	) as integer
+
+declare function TxtPreview_Generate _
 	( _
 		byref sPage as string _
 	) as integer

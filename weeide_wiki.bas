@@ -263,7 +263,7 @@ function WikiWindow.OnQueryCommand( byval menuid as UINT, byval state as UINT pt
 		end if
 		return TRUE
 
-	case IDM_WIKI_PREVIEW, IDM_WIKI_SPELLCHECK:
+	case IDM_WIKI_PREVIEW_HTML, IDM_WIKI_PREVIEW_TXT, IDM_WIKI_SPELLCHECK:
 		if( state ) then
 			*state = MF_ENABLED
 		end if

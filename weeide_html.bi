@@ -23,7 +23,7 @@ type HtmlWindow
 		declare constructor ()
 		declare destructor ()
 
-		declare static function InitInstance( byval wid as DWORD, byval hwndParent as HWND, byref title as TString, byval bWordWrap as BOOL = FALSE ) as HtmlWindow ptr
+		declare static function InitInstance( byval hwndParent as HWND, byref title as TString, byval bWordWrap as BOOL = FALSE ) as HtmlWindow ptr
 
 		declare static function WindowProc( _
 			byval hwnd as HWND, _

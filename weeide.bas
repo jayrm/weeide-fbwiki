@@ -96,7 +96,7 @@ function WinMain stdcall alias "WinMain" _
 
 	'' ///
 	'' !!! TODO: check html path
-	HtmlPreview_Init( weeide_ini_getopt( "manual_dir", exepath() & "/" ) )
+	Preview_Init( weeide_ini_getopt( "manual_dir", exepath() & "/" ) )
 
 	/'
 	'' create a new window 

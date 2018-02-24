@@ -35,8 +35,9 @@
 
 	#define IDM_WIKI_LOGIN              701
 	#define IDM_WIKI_PAGELIST           702
-	#define IDM_WIKI_PREVIEW            703
-	#define IDM_WIKI_SPELLCHECK         704
+	#define IDM_WIKI_PREVIEW_HTML       703
+	#define IDM_WIKI_PREVIEW_TXT        704
+	#define IDM_WIKI_SPELLCHECK         705
 
 #define IDM_WINDOW                      800
 

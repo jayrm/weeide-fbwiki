@@ -76,7 +76,8 @@ type MainWindow
 		declare function CmdWikiLogin() as BOOL
 		declare function CmdWikiPageList( byval bForce as BOOL ) as BOOL
 		declare function CmdWikiOpen( byref pagename as TString ) as BOOL
-		declare function CmdWikiPreview() as BOOL
+		declare function CmdWikiPreviewHtml() as BOOL
+		declare function CmdWikiPreviewTxt() as BOOL
 		declare function CmdWikiSpellCheck( byval bNext as BOOL ) as BOOL
 		
 		'' FILTER

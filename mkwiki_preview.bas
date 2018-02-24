@@ -1,6 +1,7 @@
 #include once "fbdoc_defs.bi"
 
 #include once "CWiki2Chm.bi"
+#include once "CWiki2Txt.bi"
 #include once "fbdoc_lang.bi"
 #include once "fbdoc_cache.bi"
 #include once "fbdoc_buildtoc.bi"
@@ -15,9 +16,10 @@
 using fb
 using fbdoc
 
-dim shared sOutputDir as string 
+dim shared sHtmlOutputDir as string 
+dim shared sTxtOutputDir as string 
 
-function HtmlPreview_Init _
+function Preview_Init _
 	( _
 		byref sPrefixDir as string _
 	) as integer
@@ -55,7 +57,8 @@ function HtmlPreview_Init _
 	Templates.LoadFile( "chm_doctoc", sTemplateDir + "chm_doctoc.tpl.html" )
 
 	'' ///
-	sOutputDir = sPrefixDir & "html/"
+	sHtmlOutputDir = sPrefixDir & "html/"
+	sTxtOutputDir = sPrefixDir & "txt/"
 
 	function = TRUE
 
@@ -75,7 +78,7 @@ function HtmlPreview_Generate _
 
 	'' Generate HTML
 	dim as CWiki2Chm ptr chm
-	chm = new CWiki2Chm( @"", 1, sOutputDir, paglist, toclist, lnklist )
+	chm = new CWiki2Chm( @"", 1, sHtmlOutputDir, paglist, toclist, lnklist )
 	chm->Emit()
 	delete chm
 
@@ -86,3 +89,27 @@ function HtmlPreview_Generate _
 
 end function
 
+function TxtPreview_Generate _
+	( _
+		byref sPage as string _
+	) as integer
+
+	Lang.SetOption("fb_docinfo_date", Format( Now(), Lang.GetOption("fb_docinfo_dateformat")))
+	Lang.SetOption("fb_docinfo_time", Format( Now(), Lang.GetOption("fb_docinfo_timeformat")))
+
+	dim as CPageList ptr paglist, toclist, lnklist = NULL
+
+	FBDoc_BuildSinglePage( sPage, sPage, @paglist, @toclist, FALSE )
+
+	'' Generate TXT
+	dim as CWiki2Txt ptr txt
+	txt = new CWiki2Txt( @"", 1, sTxtOutputDir, paglist, toclist )
+	txt->Emit()
+	delete txt
+
+	delete toclist
+	delete paglist
+
+	return 0
+
+end function
