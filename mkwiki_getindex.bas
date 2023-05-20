@@ -1,5 +1,6 @@
 #include once "fbdoc_defs.bi"
 #include once "CWikiCon.bi"
+#include once "CWikiConUrl.bi"
 #include once "printlog.bi"
 
 #include once "file.bi"
@@ -160,15 +161,11 @@ private function GetPageIndex _
 
 	printlog "Getting PageIndex (from " & wiki_url & "): ", TRUE
 
-	if( mkwikicon_index->LoadPage( sPage, FALSE, FALSE, sBody ) = FALSE ) then
+	if( mkwikicon_index->LoadIndex( sPage, sBody, CWikiCon.INDEX_FORMAT_LIST ) = FALSE ) then
 		printlog "Error"
 	else
 
 		printlog "OK"
-		
-		sTxt = RemoveHtmlTags( sBody )
-		sPageList = ScanForPageNames( sTxt )
-
 		printlog "Writing '" + sFileName + "': ", TRUE
 
 		dim h as integer
@@ -176,7 +173,7 @@ private function GetPageIndex _
 		if( open( sFileName for output as #h ) = 0 ) then
 			printlog "OK"
 
-			print #h, sPageList;
+			print #h, sBody;
 			close #h
 
 			function = TRUE

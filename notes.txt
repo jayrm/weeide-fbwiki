@@ -28,3 +28,26 @@ make
 
 make install
 
+
+
+
+----
+PAGE FORMATTING
+
+HTML <title> Tag:
+Before: "KeyPgIfthen: FBWiki"
+After : "IF...THEN - FreeBASIC Manual | FBWiki"
+
+Top Level Page Title:
+Before: <h2>FBWiki : KeyPgIfthen</h2>
+After : <h1>IF...THEN - FreeBASIC Manual | FBWiki</h1>
+
+Content Title:
+Before: <h3>IF...THEN</h3>
+After : <h2>IF...THEN</h2>
+
+----
+Wakka script title action:
+Before: {{fbdoc item="title" value="text"}}
+After : {{fbdoc item="title" value="text" [visible="0"]}}
+This allows for some special pages to specify an HTML title tag, a top level <h1> title, but not render to the content title.

@@ -4,6 +4,7 @@
 
 #include once "fbdoc_defs.bi"
 #include once "CWikiCon.bi"
+#include once "CWikiConUrl.bi"
 #include once "fbdoc_cache.bi"
 #include once "fbdoc_loader.bi"
 #include once "printlog.bi"
@@ -29,10 +30,10 @@ declare function RefreshPageIndex ( byval bForceDownload as integer ) as integer
 using fb
 using fbdoc
 
-extern mkwikicon_main as CWikiCon ptr
-extern mkwikicon_index as CWikiCon ptr
+extern mkwikicon_main as CWikiConUrl ptr
+extern mkwikicon_index as CWikiConUrl ptr
 
-dim shared mkwikicon_main as CWikiCon ptr = NULL
+dim shared mkwikicon_main as CWikiConUrl ptr = NULL
 
 extern wiki_url as string
 
@@ -76,7 +77,7 @@ function mkwiki_Create() as integer
 
 	if( dev_mode ) then
 		'' ///
-		wiki_url = weeide_ini_getopt( "dev_wiki_url", "https://myweb/fbwikka.git/wikka.php" )
+		wiki_url = weeide_ini_getopt( "dev_wiki_url", "https://myweb/fbwikka/wikka.php" )
 		ca_file = weeide_ini_getopt( "dev_certificate" )
 		'' sCacheDir = weeide_ini_getopt( "dev_cache_dir", exepath() + "/cache/" )
 
@@ -92,10 +93,10 @@ function mkwiki_Create() as integer
 
 	'' be sure to initialize connection object
 	'' - libcurl's lazy initialization is not thread safe
-	CWikiCon.GlobalInit()
+	CWikiConUrl.GlobalInit()
 
 	'' Initialize the main connection (logon will happen on first post)
-	mkwikicon_main = new fb.fbdoc.CWikiCon( wiki_url, ca_file )
+	mkwikicon_main = new fb.fbdoc.CWikiConUrl( wiki_url, ca_file )
 	if mkwikicon_main = NULL then
 		dim as TString msg
 		msg = "Unable to create main connection to " 
@@ -105,7 +106,7 @@ function mkwiki_Create() as integer
 	end if
 
 	'' Initialize the index connection
-	mkwikicon_index = new fb.fbdoc.CWikiCon( wiki_url, ca_file )
+	mkwikicon_index = new fb.fbdoc.CWikiConUrl( wiki_url, ca_file )
 	if mkwikicon_index = NULL then
 		delete mkwikicon_main
 		dim as TString msg
@@ -240,7 +241,7 @@ function mkwiki_LoadPageIndexToList( byval ctl as HWND, byval filter_ctl as HWND
 end function
 
 function mkwiki_LoadPage( byref sPage as string, byref sBody as string ) as integer
-	return mkwikicon_main->LoadPage( sPage, TRUE, TRUE, sBody )
+	return mkwikicon_main->LoadPage( sPage, sBody )
 end function
 
 function mkwiki_Login( byval bForce as integer ) as integer
@@ -297,7 +298,7 @@ function mkwiki_SavePage _
 		exit function
 	end if
 
-	if( mkwikicon_main->LoadPage( sPage, TRUE, TRUE, sBodyOld ) <> FALSE ) then
+	if( mkwikicon_main->LoadPage( sPage, sBodyOld ) <> FALSE ) then
 		if( mkwikicon_main->GetPageID() > 0 ) then
 			' %%% if( mkwikicon_main->Login( sUserName, sPassword ) ) = FALSE then
 			' %%%	print "Unable to login"
